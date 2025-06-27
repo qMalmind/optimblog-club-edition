@@ -15,7 +15,6 @@ class ModelExtensionModuleOptimBlogInformation extends Model {
 			return array(
 				'information_id'    => $query->row['information_id'],
 				'title'             => $query->row['title'],
-				'header'            => $query->row['header'],
 				'short_description' => $query->row['short_description'],
 				'description'       => $query->row['description'],
 				'meta_title'        => $query->row['meta_title'],

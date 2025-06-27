@@ -240,7 +240,7 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 				);
 			}
 
-			$data['heading_title'] = $category_info['header'] ? $category_info['header'] : $category_info['name'];
+			$data['heading_title'] = $category_info['name'];
 
 			// Breadcrumbs Category Product
 			if ($this->config->get('module_optimblog_breadcrumbs_category_product')) {
@@ -726,7 +726,7 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 					);
 				}
 
-				$data['heading_title'] = $information_info['header'] ? $information_info['header'] : $information_info['title'];
+				$data['heading_title'] = $information_info['title'];
 
 				$data['text_login'] = sprintf($this->language->get('text_login'), $this->url->link('account/login', '', true), $this->url->link('account/register', '', true));
 

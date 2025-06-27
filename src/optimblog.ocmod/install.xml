@@ -114,14 +114,6 @@
       </operation>
       <operation error="skip">
         <search><![CDATA[
-		$category_total = $this->model_catalog_category->getTotalCategories();
-        ]]></search>
-        <add position="replace"><![CDATA[
-		$category_total = $this->model_catalog_category->getTotalCategories($filter_data);
-        ]]></add>
-      </operation>
-      <operation error="skip">
-        <search><![CDATA[
 	protected function getList() {
         ]]></search>
         <add position="after"><![CDATA[
@@ -181,14 +173,14 @@
   <file path="admin/model/catalog/category.php">
       <operation error="skip">
         <search><![CDATA[description = '" . $this->db->escape($value['description']) . "', ]]></search>
-        <add position="replace"><![CDATA[header = '" . $this->db->escape($value['header']) . "', short_description = '" . $this->db->escape($value['short_description']) . "', description = '" . $this->db->escape($value['description']) . "', ]]></add>
+        <add position="replace"><![CDATA[short_description = '" . $this->db->escape($value['short_description']) . "', description = '" . $this->db->escape($value['description']) . "', ]]></add>
       </operation>
       <operation error="skip">
         <search><![CDATA[
 				'name'             => $result['name'],
         ]]></search>
         <add position="after"><![CDATA[
-				'header'            => $result['header'],
+				'meta_h1'            => $result['meta_h1'],
 				'short_description' => $result['short_description'],
         ]]></add>
       </operation>
@@ -264,26 +256,6 @@
 			'information',
         ]]></add>
       </operation>
-      <operation error="skip">
-        <search><![CDATA[getTotalCategories()]]></search>
-        <add position="replace"><![CDATA[getTotalCategories($data = array())]]></add>
-      </operation>
-      <operation error="skip">
-        <search><![CDATA[
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "category");
-        ]]></search>
-        <add position="replace"><![CDATA[
-		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "category";
-
-		$sql .= " WHERE category_id != ''";
-
-		if (isset($data['filter_information']) && ($data['filter_information'] == '0' || $data['filter_information'] == '1')) {
-			$sql .= " AND information = '" . (int)$data['filter_information'] . "'";
-		}
-
-		$query = $this->db->query($sql);
-        ]]></add>
-      </operation>
   </file>
 
   <file path="admin/view/template/catalog/category_form.twig">
@@ -292,12 +264,6 @@
                   <div class="form-group">
         ]]></search>
         <add position="before"><![CDATA[
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label" for="input-header{{ language.language_id }}"><span data-toggle="tooltip" title="{{ help_header }}">{{ entry_header }}</span></label>
-                    <div class="col-sm-10">
-                      <input type="text" name="category_description[{{ language.language_id }}][header]" value="{{ category_description[language.language_id] ? category_description[language.language_id].header }}" placeholder="{{ entry_header }}" id="input-header{{ language.language_id }}" class="form-control" />
-                    </div>
-                  </div>
                   <div class="form-group">
                     <label class="col-sm-2 control-label" for="input-short-description{{ language.language_id }}">{{ entry_short_description }}<br /><button type="button" class="btn btn-primary btn-xs summernote" data-toggle="button" aria-pressed="false" autocomplete="off" data-language="{{ language.language_id }}">Summernote</button></label>
                     <div class="col-sm-10">
@@ -454,14 +420,6 @@ $(document).ready(function() {
         </div>
         <a href="{{ add }}" data-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
         <a href="{{ repair }}" data-toggle="tooltip" title="{{ button_rebuild }}" class="btn btn-default"><i class="fa fa-refresh"></i></a>
-        ]]></add>
-      </operation>
-      <operation error="skip">
-        <search><![CDATA[
-                  <td class="text-left">{% if sort %}
-        ]]></search>
-        <add position="replace"><![CDATA[
-                  <td class="text-left">{% if sort == 'name' %}
         ]]></add>
       </operation>
       <operation error="skip">
@@ -971,7 +929,7 @@ $(document).ready(function() {
   <file path="admin/model/catalog/information.php">
       <operation error="skip">
         <search><![CDATA[description = '" . $this->db->escape($value['description']) . "']]></search>
-        <add position="replace"><![CDATA[header = '" . $this->db->escape($value['header']) . "', short_description = '" . $this->db->escape($value['short_description']) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "']]></add>
+        <add position="replace"><![CDATA[short_description = '" . $this->db->escape($value['short_description']) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "']]></add>
       </operation>
       <operation error="skip">
         <search><![CDATA[
@@ -987,7 +945,6 @@ $(document).ready(function() {
 				'title'            => $result['title'],
         ]]></search>
         <add position="after"><![CDATA[
-				'header'            => $result['header'],
 				'short_description' => $result['short_description'],
 				'tag'               => $result['tag'],
         ]]></add>
@@ -1383,12 +1340,6 @@ $(document).ready(function() {
         ]]></search>
         <add position="before"><![CDATA[
                   <div class="form-group">
-                    <label class="col-sm-2 control-label" for="input-header{{ language.language_id }}"><span data-toggle="tooltip" title="{{ help_header }}">{{ entry_header }}</span></label>
-                    <div class="col-sm-10">
-                      <input type="text" name="information_description[{{ language.language_id }}][header]" value="{{ information_description[language.language_id] ? information_description[language.language_id].header }}" placeholder="{{ entry_header }}" id="input-header{{ language.language_id }}" class="form-control" />
-                    </div>
-                  </div>
-                  <div class="form-group">
                     <label class="col-sm-2 control-label" for="input-short-description{{ language.language_id }}">{{ entry_short_description }}<br /><button type="button" class="btn btn-primary btn-xs summernote" data-toggle="button" aria-pressed="false" autocomplete="off" data-language="{{ language.language_id }}">Summernote</button></label>
                     <div class="col-sm-10">
                       <textarea name="information_description[{{ language.language_id }}][short_description]" placeholder="{{ entry_short_description }}" id="input-short-description{{ language.language_id }}" class="form-control">{{ information_description[language.language_id] ? information_description[language.language_id].short_description }}</textarea>
@@ -1398,7 +1349,7 @@ $(document).ready(function() {
       </operation>
       <operation error="skip">
         <search><![CDATA[
-                      <textarea name="information_description[{{ language.language_id }}][meta_keyword]" rows="5" placeholder="{{ entry_meta_keyword }}" id="input-meta-keyword{{ language.language_id }}" class="form-control">{{ information_description[language.language_id] ? information_description[language.language_id].meta_keyword }}</textarea>
+                      <textarea name="information_description[{{ language.language_id }}][meta_keyword]" data-length="255" rows="5" placeholder="{{ entry_meta_keyword }}" id="input-meta-keyword{{ language.language_id }}" class="form-control">{{ information_description[language.language_id] ? information_description[language.language_id].meta_keyword }}</textarea>
         ]]></search>
         <add position="after"><![CDATA[
                     </div>
@@ -2256,18 +2207,6 @@ $('input[name=\'filter_name\']').autocomplete({
       </operation>
       <operation error="skip">
         <search><![CDATA[
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$category_id . "'");
-        ]]></search>
-        <add position="replace"><![CDATA[
-				if (!empty($data['main_category']) && $data['main_category'] == (int)$category_id) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$category_id . "', main_category = '1'");
-				} else {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$category_id . "'");
-				}
-        ]]></add>
-      </operation>
-      <operation error="skip">
-        <search><![CDATA[
 			$product_related_data[] = $result['related_id'];
         ]]></search>
         <add position="replace"><![CDATA[
@@ -2287,34 +2226,18 @@ $('input[name=\'filter_name\']').autocomplete({
       </operation>
       <operation error="skip">
         <search><![CDATA[
-				$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "' AND related_id = '" . (int)$related_id . "'");
+				$this->db->query("REPLACE INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$related_id . "'");
         ]]></search>
         <add position="replace"><![CDATA[
-				$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "' AND related_id = '" . (int)$product_related['product_id'] . "'");
+        $this->db->query("REPLACE INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$product_related['product_id'] . "'");
         ]]></add>
       </operation>
       <operation error="skip">
         <search><![CDATA[
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$related_id . "'");
+				$this->db->query("REPLACE INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
         ]]></search>
         <add position="replace"><![CDATA[
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$product_related['product_id'] . "', route = '" . (int)$product_related['route'] . "'");
-        ]]></add>
-      </operation>
-      <operation error="skip">
-        <search><![CDATA[
-				$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$related_id . "' AND related_id = '" . (int)$product_id . "'");
-        ]]></search>
-        <add position="replace"><![CDATA[
-				$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_related['product_id'] . "' AND related_id = '" . (int)$product_id . "'");
-        ]]></add>
-      </operation>
-      <operation error="skip">
-        <search><![CDATA[
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
-        ]]></search>
-        <add position="replace"><![CDATA[
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$product_related['product_id'] . "', related_id = '" . (int)$product_id . "', route = '" . (int)$product_related['route'] * -1 . "'");
+        $this->db->query("REPLACE INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$product_related['product_id'] . "', related_id = '" . (int)$product_id . "'");
         ]]></add>
       </operation>
       <operation error="skip">
@@ -2385,36 +2308,12 @@ $('input[name=\'filter_name\']').autocomplete({
         ]]></add>
       </operation>
       <operation error="skip">
-        <search><![CDATA[
-                    <div id="product-category{{ product_category.category_id }}"><i class="fa fa-minus-circle"></i> {{ product_category.name }}
-        ]]></search>
-        <add position="replace"><![CDATA[
-                    {% if main_category and main_category == product_category.category_id %}
-                    <div id="product-category{{ product_category.category_id }}" class="text-success"><i class="fa fa-minus-circle"></i> <i class="fa fa-dot-circle-o" data-toggle="tooltip" title="{{ help_main_category }}"></i> {{ product_category.name }}
-        ]]></add>
-      </operation>
-      <operation error="skip">
-        <search><![CDATA[
-                      <input type="hidden" name="product_category[]" value="{{ product_category.category_id }}"
-        ]]></search>
-        <add position="after"><![CDATA[
-                      <input type="hidden" name="main_category" value="{{ product_category.category_id }}" />
-                    </div>
-                    {% else %}
-                    <div id="product-category{{ product_category.category_id }}"><i class="fa fa-minus-circle"></i> <i class="fa fa-circle-o" data-toggle="tooltip" title="{{ help_main_category_add }}"></i> {{ product_category.name }}
-                      <input type="hidden" name="product_category[]" value="{{ product_category.category_id }}" />
-                    </div>
-                    {% endif %}
-                    <div class="hidden">
-        ]]></add>
-      </operation>
-      <operation error="skip">
         <search><![CDATA[catalog/category/autocomplete&user_token={{ user_token }}]]></search>
         <add position="replace"><![CDATA[catalog/category/autocomplete&user_token={{ user_token }}&filter_information=0]]></add>
       </operation>
       <operation error="skip">
         <search><![CDATA[
-		$('#product-category').append('<div id="product-category' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product_category[]" value="' + item['value'] + '" /></div>');
+		  $('#product-category').append('<div id="product-category' + item['value'] + '"><i class="fa fa-minus-circle"></i> <label><input type="radio" name="main_category" value="{{ product_category.category_id }}" data-toggle="tooltip" title="{{ entry_main_category }}" /> <span>' + item['label'] + '</span></label><input type="hidden" name="product_category[]" value="' + item['value'] + '" /></div>');
         ]]></search>
         <add position="replace"><![CDATA[
         $('#product-category').append('<div id="product-category' + item['value'] + '"><i class="fa fa-minus-circle"></i> <i class="fa fa-circle-o" data-toggle="tooltip" title="{{ help_main_category_add }}"></i> ' + item['label'] + '<input type="hidden" name="product_category[]" value="' + item['value'] + '" /></div>');
@@ -2797,34 +2696,6 @@ $(document).ready(function() {
         <add position="replace"><![CDATA[AS product, (SELECT id.title FROM " . DB_PREFIX . "information_description id WHERE id.information_id = r.information_id AND id.language_id = '" . (int)$this->config->get('config_language_id') . "') AS information]]></add>
       </operation>
       <operation error="skip">
-        <search index="0"><![CDATA[
-		if (!empty($data['filter_author'])) {
-        ]]></search>
-        <add position="before"><![CDATA[
-		if (!empty($data['information'])) {
-			$sql = "SELECT r.review_id, id.title, r.author, r.rating, r.status, r.date_added FROM " . DB_PREFIX . "review r LEFT JOIN " . DB_PREFIX . "information_description id ON (r.information_id = id.information_id) WHERE id.language_id = '" . (int)$this->config->get('config_language_id') . "'";
-
-			if (!empty($data['filter_information'])) {
-				$sql .= " AND id.title LIKE '" . $this->db->escape($data['filter_information']) . "%'";
-			}
-		}
-        ]]></add>
-      </operation>
-      <operation error="skip">
-        <search index="1"><![CDATA[
-		if (!empty($data['filter_author'])) {
-        ]]></search>
-        <add position="before"><![CDATA[
-		if (!empty($data['information'])) {
-			$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r LEFT JOIN " . DB_PREFIX . "information_description id ON (r.information_id = id.information_id) WHERE id.language_id = '" . (int)$this->config->get('config_language_id') . "'";
-
-			if (!empty($data['filter_information'])) {
-				$sql .= " AND id.title LIKE '" . $this->db->escape($data['filter_information']) . "%'";
-			}
-		}
-        ]]></add>
-      </operation>
-      <operation error="skip">
         <search><![CDATA[
 		$sort_data = array(
         ]]></search>
@@ -3022,9 +2893,9 @@ $('input[name=\'information\']').autocomplete({
       </operation>
       <operation error="skip">
         <search><![CDATA[
-	var filter_product = $('input[name=\'filter_product\']').val();
+	let url = '';
         ]]></search>
-        <add position="before"><![CDATA[
+        <add position="after"><![CDATA[
     {% if information %}
 	url += '&information=1';
 
@@ -3038,9 +2909,9 @@ $('input[name=\'information\']').autocomplete({
       </operation>
       <operation error="skip">
         <search><![CDATA[
-	var filter_author = $('input[name=\'filter_author\']').val();
+	let url = '';
         ]]></search>
-        <add position="before"><![CDATA[
+        <add position="after"><![CDATA[
     {% endif %}
         ]]></add>
       </operation>
