@@ -28,30 +28,11 @@ class ModelExtensionModuleOptimBlog extends Model {
 			$this->db->query("ALTER TABLE `" . DB_PREFIX . "category` ADD `information` tinyint(1) NOT NULL AFTER `date_modified`");
 		}
 
-		// Category Header
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "category_description' AND COLUMN_NAME = 'meta_h1'");
-
-		if ($query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` CHANGE `meta_h1` `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
-		}
-
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "category_description' AND COLUMN_NAME = 'meta_header'");
-
-		if ($query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` CHANGE `meta_header` `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
-		}
-
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "category_description' AND COLUMN_NAME = 'header'");
-
-		if (!$query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` ADD `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `name`");
-		}
-
 		// Category Short Description
 		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "category_description' AND COLUMN_NAME = 'short_description'");
 
 		if (!$query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` ADD `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `header`");
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` ADD `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `meta_h1`");
 		}
 
 		// Category Description Upgrade
@@ -59,8 +40,7 @@ class ModelExtensionModuleOptimBlog extends Model {
 
 		foreach ($field_query->rows as $field) {
 			if ($field['Field'] == 'header' && $field_name != 'name') {
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` CHANGE `header` `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `name`");
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` CHANGE `short_description` `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `header`");
+				$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` CHANGE `short_description` `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `meta_h1`");
 			}
 
 			$field_name = $field['Field'];
@@ -79,13 +59,6 @@ class ModelExtensionModuleOptimBlog extends Model {
 		if (!$query->num_rows) {
 			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information` ADD `manufacturer_id` int(11) NOT NULL AFTER `image`");
 		}
-
-		// Information Top Menu
-//		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "information' AND COLUMN_NAME = 'top'");
-        
-//		if (!$query->num_rows) {
-//			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information` ADD `top` tinyint(1) NOT NULL DEFAULT '0' AFTER `manufacturer_id`");
-//		}
 
 		// Information Sort Order Type
 		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "information' AND COLUMN_NAME = 'sort_order' AND COLUMN_TYPE = 'int(11)'");
@@ -144,37 +117,11 @@ class ModelExtensionModuleOptimBlog extends Model {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
 
-		// Information Header
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "information_description' AND COLUMN_NAME = 'meta_h1'");
-
-		if ($query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` CHANGE `meta_h1` `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
-		}
-
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "information_description' AND COLUMN_NAME = 'meta_header'");
-
-		if ($query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` CHANGE `meta_header` `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
-		}
-
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "information_description' AND COLUMN_NAME = 'header'");
-
-		if (!$query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` ADD `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `title`");
-		}
-
-		// Information Short Description
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "information_description' AND COLUMN_NAME = 'short_description'");
-
-		if (!$query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` ADD `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `header`");
-		}
-
 		// Information Description Type
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "information_description' AND COLUMN_NAME = 'description' AND COLUMN_TYPE = 'text'");
+		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "information_description' AND COLUMN_NAME = 'description'");
 
 		if (!$query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` CHANGE `description` `description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` ADD `description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
 		}
 
 		// Information Tag
@@ -185,12 +132,15 @@ class ModelExtensionModuleOptimBlog extends Model {
 		}
 
 		// Information Description Upgrade
-		$field_query = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "information_description`");
+		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "information_description' AND COLUMN_NAME = 'short_description'");
+		if (!$query->num_rows) {
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` ADD `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `meta_h1`");
+		}
 
+		$field_query = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "information_description`");
 		foreach ($field_query->rows as $field) {
 			if ($field['Field'] == 'header' && $field_name != 'title') {
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` CHANGE `header` `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `title`");
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` CHANGE `short_description` `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `header`");
+				$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` CHANGE `short_description` `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `meta_h1`");
                 $this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` CHANGE `tag` `tag` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `description`");
 			}
 
@@ -217,18 +167,6 @@ class ModelExtensionModuleOptimBlog extends Model {
 				KEY `information_id` (`information_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
-
-		// Information File
-//		$this->db->query("
-//			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "information_file` (
-//				`information_file_id` int(11) NOT NULL AUTO_INCREMENT,
-//                `information_id` int(11) NOT NULL,
-//                `file` varchar(255) DEFAULT NULL,
-//                `sort_order` int(3) NOT NULL DEFAULT '0',
-//				PRIMARY KEY (`information_file_id`),
-//                KEY `information_id` (`information_id`)
-//			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-//		");
 
 		// Information Related
 		$this->db->query("
@@ -260,15 +198,6 @@ class ModelExtensionModuleOptimBlog extends Model {
                 KEY `category_id` (`category_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
-
-		// Information Customer Groups
-//		$this->db->query("
-//			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "information_to_customer_group` (
-//				`information_id` int(11) NOT NULL,
-//				`customer_group_id` int(11) NOT NULL,
-//				PRIMARY KEY (`information_id`,`customer_group_id`)
-//			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-//		");
 
 		// Information User
 		$this->db->query("
@@ -307,42 +236,12 @@ class ModelExtensionModuleOptimBlog extends Model {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "seo_url` SET `store_id` = '" . (int)$this->config->get('config_store_id') . "', `language_id` = '" . (int)$this->config->get('config_language_id') . "', `query` = 'information/search', keyword = 'search-information'");
 		}
 
-		// Product Header
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "product_description' AND COLUMN_NAME = 'meta_h1'");
-
-		if ($query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "product_description` CHANGE `meta_h1` `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
-		}
-
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "product_description' AND COLUMN_NAME = 'meta_header'");
-
-		if ($query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "product_description` CHANGE `meta_header` `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
-		}
-
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "product_description' AND COLUMN_NAME = 'header'");
-
-		if (!$query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "product_description` ADD `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `name`");
-		}
-
-		// Product Short Description
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "product_description' AND COLUMN_NAME = 'short_description'");
-
-		if (!$query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "product_description` ADD `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `header`");
-		}
-
 		// Product Description Upgrade
 		$field_query = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "product_description`");
 
-		foreach ($field_query->rows as $field) {
-			if ($field['Field'] == 'header' && $field_name != 'name') {
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "product_description` CHANGE `header` `header` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `name`");
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "product_description` CHANGE `short_description` `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `header`");
-			}
-
-			$field_name = $field['Field'];
+		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "product_description' AND COLUMN_NAME = 'short_description'");
+		if (!$query->num_rows) {
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "product_description` ADD `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `meta_h1`");
 		}
 
 		// Product Main Category

@@ -122,7 +122,7 @@ class ControllerExtensionInformationCategory extends Controller {
 			$this->document->setKeywords($category_info['meta_keyword']);
 			$this->document->addScript('catalog/view/javascript/optimblog.js');
 			
-			$data['heading_title'] = $category_info['header'] ? $category_info['header'] : $category_info['name'];
+			$data['heading_title'] = $category_info['meta_h1'] ? $category_info['meta_h1'] : $category_info['name'];
 
 			$data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
 

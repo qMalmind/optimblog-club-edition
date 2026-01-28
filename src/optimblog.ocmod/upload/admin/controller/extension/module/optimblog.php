@@ -10,7 +10,7 @@
 class ControllerExtensionModuleOptimBlog extends Controller {
 	private $error = array();
 	private $version = '3.1.0.1';
-	private $github = 'https://api.github.com/repos/optimlab/optimblog';
+	private $github = 'https://api.github.com/repos/qMalmind/optimblog-club-edition';
 	private $releases = '/releases';
 	private $latest = '/latest';
 
@@ -259,13 +259,13 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 
 		$data['theme_directory'] = $setting_info['theme_' . $data['config_theme'] .'_directory'];
 
-//		$data['directories'] = array();
-//
-//		$directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);
-//
-//		foreach ($directories as $directory) {
-//			$data['directories'][] = basename($directory);
-//		}
+		//		$data['directories'] = array();
+		//
+		//		$directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);
+		//
+		//		foreach ($directories as $directory) {
+		//			$data['directories'][] = basename($directory);
+		//		}
 
 		if (isset($this->request->get['store_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$setting_info = $this->model_setting_setting->getSetting('module_optimblog', $this->request->get['store_id']);
@@ -1151,9 +1151,9 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 			$json['error'] = $this->language->get('error_download');
 		}
 
-//		if (isset($this->request->get['version'])) {
-//			$this->version = $this->request->get['version'];
-//		}
+		//		if (isset($this->request->get['version'])) {
+		//			$this->version = $this->request->get['version'];
+		//		}
 
 		// Check if there is a install zip already there
 		$files = glob(DIR_UPLOAD . '*.tmp');
@@ -1214,7 +1214,7 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 				break;
 			}
 		}
-
+		
 		if (!$json) {
 			$curl = curl_init($this->github . '/releases');
 
@@ -1230,13 +1230,13 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 			$status = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
 
 			curl_close($curl);
-
 			$response_info = json_decode($response, true);
 
 			if ($status == 200) {
 				foreach ($response_info as $release) {
 					if (!$release['prerelease'] && !isset($json['text'])) {
 						foreach ($release['assets'] as $asset) {
+						// exit("<pre>" . print_r($this->request->get['extension'] . '.ocmod.zip', true) . "</pre>");
 							if ($asset['name'] == $this->request->get['extension'] . '.ocmod.zip' && substr(basename($asset['browser_download_url']), -10) == '.ocmod.zip') {
 								$this->session->data['install'] = token(10);
 

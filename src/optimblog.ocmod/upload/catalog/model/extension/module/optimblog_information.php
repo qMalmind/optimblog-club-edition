@@ -15,7 +15,6 @@ class ModelExtensionModuleOptimBlogInformation extends Model {
 			return array(
 				'information_id'    => $query->row['information_id'],
 				'title'             => $query->row['title'],
-				'header'            => $query->row['header'],
 				'short_description' => $query->row['short_description'],
 				'description'       => $query->row['description'],
 				'meta_title'        => $query->row['meta_title'],
@@ -26,7 +25,7 @@ class ModelExtensionModuleOptimBlogInformation extends Model {
 				'bottom'            => $query->row['bottom'],
 				'manufacturer_id'   => $query->row['manufacturer_id'],
 				'manufacturer'      => $query->row['manufacturer'],
-				'rating'            => round(($query->row['rating']===null) ? 0 : $query->row['rating']),
+				'rating'            => round($query->row['rating']),
 				'reviews'           => $query->row['reviews'] ? $query->row['reviews'] : 0,
 				'user_id'           => $query->row['user_id'],
 				'author'            => $query->row['author'],
