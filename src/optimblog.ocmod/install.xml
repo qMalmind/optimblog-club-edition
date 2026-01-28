@@ -2171,6 +2171,7 @@ $('input[name=\'filter_name\']').autocomplete({
         ]]></search>
         <add position="before"><![CDATA[
 				'short_description' => $result['short_description'],
+        'meta_h1'           => $query->row['meta_h1'],
         ]]></add>
       </operation>
       <operation error="skip">
