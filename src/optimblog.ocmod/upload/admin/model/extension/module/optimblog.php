@@ -393,6 +393,80 @@ class ModelExtensionModuleOptimBlog extends Model {
 
 			$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `code` = 'information'");
 			$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `code` = 'information_optimblog'");
+
+			// в клубной сборке нет по умолчанию макета для information category, поэтому его нужно создать
+			// но также нужно учитывать наличе нескольких магазинов и какой подход используется, если магазинов несколько
+			// 1. Один роут -- один макет
+			// 2. Один роут -- много макетов
+			$stores = $this->db->query("SELECT `store_id` FROM `" . DB_PREFIX . "store`");
+    		$all_stores = $stores->rows;
+			if(empty($all_stores)){
+				$all_stores = [
+					0 => [
+						'store_id' => '0'
+					],
+				];
+				
+			}
+			
+			// список layout у которых есть роут information/category
+			$avaibale_layout_ids = [];
+			// список store id к которым нужно добавить route information/category
+			$need_add_routes_stores = [];
+
+			$layout_table = DB_PREFIX.'layout';
+			$layout_route_table = DB_PREFIX.'layout_route';
+			foreach ($all_stores as $store) {
+				$store_id = intval($store['store_id']);
+				
+				$sql_layout_routes = "SELECT * FROM `{$layout_route_table}` as `lr`
+					WHERE `lr`.`route` = 'information/category' AND `lr`.`store_id` = {$store_id}
+				;";
+				$res = $this->db->query($sql_layout_routes);
+				if($res->num_rows == 0){
+					$need_add_routes_stores[] = $store_id;
+				}else{
+					$res = $res->rows;
+					$avaibale_layout_ids[] = $res['layout_id'];
+				}
+			}
+
+			// нужно создать layout route для одного или нескольких магазинов
+			if(!empty($need_add_routes_stores)){
+
+				$layout_id = 0;
+				// на один стор один layout
+				if(count($avaibale_layout_ids) == 1){
+					$layout_id = $avaibale_layout_ids[0];
+				// layout нет для роута с information/category
+				}elseif(empty($avaibale_layout_ids)){
+					$sql_insert_layout = "INSERT INTO `{$layout_table}` (`name`) VALUES ('infromation category auto create from optimblog');";
+					$this->db->query($sql_insert_layout);
+					$layout_id = $this->db->getLastId();
+				}
+				
+				$insert_data = [];
+				foreach ($need_add_routes_stores as $store_id) {
+					// в магазине уже для каждого роута information/category заведён отдельный layout, поэтому поступаем также
+					if($layout_id == 0){
+						$sql_insert_layout = "INSERT INTO `{$layout_table}` (`name`) VALUES ('infromation category auto create from optimblog');";
+						$this->db->query($sql_insert_layout);
+						$layout_id = $this->db->getLastId();
+					}
+					$insert_data[] = "(" .  implode(", ", [
+						'layout_id' => $layout_id,
+						'store_id' => intval($store_id),
+						'route' => "'information/category'",
+					]) . ")";
+
+					$layout_id = 0;
+				}
+				$string_insert_data = implode(", ", $insert_data);
+				$sql_inserts_rows = "INSERT INTO `{$layout_route_table}` (`layout_id`, `store_id`, `route`) VALUES {$string_insert_data}";
+				$this->db->query($sql_inserts_rows);
+			}
+
+
 		}
 
 		$this->model_setting_event->deleteEventByCode('optimblog_admin_language_category');
