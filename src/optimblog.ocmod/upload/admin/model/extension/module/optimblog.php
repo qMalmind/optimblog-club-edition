@@ -18,7 +18,7 @@ class ModelExtensionModuleOptimBlog extends Model {
 				`sort_order` int(3) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`category_image_id`),
 				KEY `category_id` (`category_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
 
 		// Category Type
@@ -32,7 +32,7 @@ class ModelExtensionModuleOptimBlog extends Model {
 		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "category_description' AND COLUMN_NAME = 'short_description'");
 
 		if (!$query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` ADD `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `meta_h1`");
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` ADD `short_description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `meta_h1`");
 		}
 
 		// Category Description Upgrade
@@ -40,7 +40,7 @@ class ModelExtensionModuleOptimBlog extends Model {
 
 		foreach ($field_query->rows as $field) {
 			if ($field['Field'] == 'header' && $field_name != 'name') {
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` CHANGE `short_description` `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `meta_h1`");
+				$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` CHANGE `short_description` `short_description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `meta_h1`");
 			}
 
 			$field_name = $field['Field'];
@@ -114,7 +114,7 @@ class ModelExtensionModuleOptimBlog extends Model {
 				`language_id` int(11) NOT NULL,
 				`text` text NOT NULL,
 				PRIMARY KEY (`information_id`, `attribute_id`, `language_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
 
 		// Information Description Type
@@ -134,13 +134,13 @@ class ModelExtensionModuleOptimBlog extends Model {
 		// Information Description Upgrade
 		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "information_description' AND COLUMN_NAME = 'short_description'");
 		if (!$query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` ADD `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `meta_h1`");
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` ADD `short_description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `meta_h1`");
 		}
 
 		$field_query = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "information_description`");
 		foreach ($field_query->rows as $field) {
 			if ($field['Field'] == 'header' && $field_name != 'title') {
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` CHANGE `short_description` `short_description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `meta_h1`");
+				$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` CHANGE `short_description` `short_description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `meta_h1`");
                 $this->db->query("ALTER TABLE `" . DB_PREFIX . "information_description` CHANGE `tag` `tag` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `description`");
 			}
 
@@ -153,7 +153,7 @@ class ModelExtensionModuleOptimBlog extends Model {
 				`information_id` int(11) NOT NULL,
 				`filter_id` int(11) NOT NULL,
 				PRIMARY KEY (`information_id`, `filter_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
 
 		// Information Images
@@ -165,7 +165,7 @@ class ModelExtensionModuleOptimBlog extends Model {
 				`sort_order` int(3) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`information_image_id`),
 				KEY `information_id` (`information_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
 
 		// Information Related
@@ -175,7 +175,7 @@ class ModelExtensionModuleOptimBlog extends Model {
                 `related_id` int(11) NOT NULL,
                 `route` tinyint(1) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`information_id`, `related_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
 
 		// Information Product Related
@@ -185,7 +185,7 @@ class ModelExtensionModuleOptimBlog extends Model {
                 `product_id` int(11) NOT NULL,
                 `route` tinyint(1) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`information_id`, `product_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
 
 		// Information To Category
@@ -196,7 +196,7 @@ class ModelExtensionModuleOptimBlog extends Model {
                 `main_category` tinyint(1) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`information_id`, `category_id`),
                 KEY `category_id` (`category_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
 
 		// Information User
@@ -205,7 +205,7 @@ class ModelExtensionModuleOptimBlog extends Model {
 				`information_id` int(11) NOT NULL,
 				`user_id` int(11) NOT NULL,
 				PRIMARY KEY (`information_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 		");
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "information_to_user`");
@@ -309,15 +309,15 @@ class ModelExtensionModuleOptimBlog extends Model {
 			$field_name = $field['Field'];
 		}
         
-		// MyISAM Upgrade
-		$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_image` ENGINE=MyISAM");
-		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_attribute` ENGINE=MyISAM");
-		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_filter` ENGINE=MyISAM");
-		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_image` ENGINE=MyISAM");
-		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_related` ENGINE=MyISAM");
-		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_product_related` ENGINE=MyISAM");
-		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_to_category` ENGINE=MyISAM");
-		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_to_user` ENGINE=MyISAM");
+		// InnoDB Upgrade
+		$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_image` ENGINE=InnoDB");
+		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_attribute` ENGINE=InnoDB");
+		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_filter` ENGINE=InnoDB");
+		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_image` ENGINE=InnoDB");
+		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_related` ENGINE=InnoDB");
+		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_product_related` ENGINE=InnoDB");
+		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_to_category` ENGINE=InnoDB");
+		$this->db->query("ALTER TABLE `" . DB_PREFIX . "information_to_user` ENGINE=InnoDB");
 	}
 
 	public function update() {
