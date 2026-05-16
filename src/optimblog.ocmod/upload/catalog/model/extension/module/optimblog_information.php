@@ -15,6 +15,7 @@ class ModelExtensionModuleOptimBlogInformation extends Model {
 			return array(
 				'information_id'    => $query->row['information_id'],
 				'title'             => $query->row['title'],
+				'meta_h1'           => isset($query->row['meta_h1'])?$query->row['meta_h1']:'',
 				'short_description' => $query->row['short_description'],
 				'description'       => $query->row['description'],
 				'meta_title'        => $query->row['meta_title'],

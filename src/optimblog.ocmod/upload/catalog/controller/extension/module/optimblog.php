@@ -726,7 +726,7 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 					);
 				}
 
-				$data['heading_title'] = $information_info['title'];
+				// $data['heading_title'] = $information_info['title'];
 
 				$data['text_login'] = sprintf($this->language->get('text_login'), $this->url->link('account/login', '', true), $this->url->link('account/register', '', true));
 
