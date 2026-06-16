@@ -747,21 +747,52 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 					$data['popup'] = '';
 				}
 
+				
+				$disable_resize = $this->config->get('module_optimblog_disable_resize_information_slider');
+
+				$results = $this->model_extension_module_optimblog_information->getInformationImages($information_id);
+
 				if ($information_info['image'] && $this->config->get('module_optimblog_information_thumb')) {
-					$data['thumb'] = $this->model_tool_image->resize($information_info['image'], $this->config->get('module_optimblog_image_thumb_width'), $this->config->get('module_optimblog_image_thumb_height'));
+					if($disable_resize && count($results) > 0){
+						$image_url = ($this->request->server['HTTPS'] ? $this->config->get('config_ssl') : $this->config->get('config_url')) . 'image/' . $information_info['image'];
+					}else{
+						$image_url = $this->model_tool_image->resize($information_info['image'], $this->config->get('module_optimblog_image_thumb_width'), $this->config->get('module_optimblog_image_thumb_height'));
+					}
+					$data['thumb'] = $image_url;
 				} else {
 					$data['thumb'] = '';
 				}
 
+
 				$data['images'] = array();
 
-				$results = $this->model_extension_module_optimblog_information->getInformationImages($information_id);
 
 				foreach ($results as $result) {
-					$data['images'][] = array(
-						'popup' => $this->model_tool_image->resize($result['image'], $this->config->get('module_optimblog_image_popup_width'), $this->config->get('module_optimblog_image_popup_height')),
-						'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('module_optimblog_image_additional_width'), $this->config->get('module_optimblog_image_additional_height'))
-					);
+					if ($disable_resize) {
+
+						$image_url = ($this->request->server['HTTPS'] ? $this->config->get('config_ssl') : $this->config->get('config_url')) . 'image/' . $result['image'];
+
+						$data['images'][] = array(
+							'popup' => $image_url,
+							'thumb' => $image_url
+						);
+
+					} else {
+
+						$data['images'][] = array(
+							'popup' => $this->model_tool_image->resize(
+								$result['image'],
+								$this->config->get('module_optimblog_image_popup_width'),
+								$this->config->get('module_optimblog_image_popup_height')
+							),
+							'thumb' => $this->model_tool_image->resize(
+								$result['image'],
+								$this->config->get('module_optimblog_image_additional_width'),
+								$this->config->get('module_optimblog_image_additional_height')
+							)
+						);
+
+					}
 				}
 
 				$data['review_status'] = $this->config->get('module_optimblog_review_status');

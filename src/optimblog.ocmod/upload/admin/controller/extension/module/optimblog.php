@@ -9,7 +9,7 @@
  */
 class ControllerExtensionModuleOptimBlog extends Controller {
 	private $error = array();
-	private $version = '3.1.0.1';
+	private $version = '3.2';
 	private $github = 'https://api.github.com/repos/qMalmind/optimblog-club-edition';
 	private $releases = '/releases';
 	private $latest = '/latest';
@@ -967,6 +967,14 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 			$data['module_optimblog_image_category_additional_height'] = $setting_info['module_optimblog_image_category_additional_height'];
 		} else {
 			$data['module_optimblog_image_category_additional_height'] = 74;
+		}
+
+		if (isset($this->request->post['module_optimblog_disable_resize_information_slider'])) {
+			$data['module_optimblog_disable_resize_information_slider'] = $this->request->post['module_optimblog_disable_resize_information_slider'];
+		} elseif (isset($setting_info['module_optimblog_disable_resize_information_slider'])) {
+			$data['module_optimblog_disable_resize_information_slider'] = $setting_info['module_optimblog_disable_resize_information_slider'];
+		} else {
+			$data['module_optimblog_disable_resize_information_slider'] = 0;
 		}
 		
 		$data['version'] = 'v' . $this->version;
