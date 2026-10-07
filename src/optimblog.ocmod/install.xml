@@ -2,7 +2,7 @@
 <modification>
   <name>OptimBlog for opencart club</name>
   <code>optimblog</code>
-  <version>3.2</version>
+  <version>3.3</version>
   <author>qMalmind | expoa.ru</author>
   <link>info@expoa.ru</link>
 
@@ -3185,8 +3185,8 @@ $('input[name=\'information\']').autocomplete({
         </div>
         <div class="swiper-pagination slideshow-information"></div>
         <div class="swiper-pager">
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next slideshow-information-next"></div>
+          <div class="swiper-button-prev slideshow-information-prev"></div>
         </div>
       </div>
       <script type="text/javascript"><!--
@@ -3195,8 +3195,8 @@ $('input[name=\'information\']').autocomplete({
       	slidesPerView: 1,
       	pagination: '.slideshow-information',
       	paginationClickable: true,
-      	nextButton: '.swiper-button-next',
-      	prevButton: '.swiper-button-prev',
+      	nextButton: '.slideshow-information-next',
+      	prevButton: '.slideshow-information-prev',
       	spaceBetween: 30,
       	autoplay: 5000,
       	autoplayDisableOnInteraction: true
@@ -3283,8 +3283,85 @@ $('input[name=\'information\']').autocomplete({
       <hr>
       {{ share }}
 
+      {% if column_left and column_right %}
+      {% set related_per_view = 2 %}
+      {% elseif column_left or column_right %}
+      {% set related_per_view = 3 %}
+      {% else %}
+      {% set related_per_view = 4 %}
+      {% endif %}
+      {% if (informations and information_related_type == 'slider') or (products and product_related_type == 'slider') %}
+      <style>
+        .optimblog-related-slider { background: transparent; border: 0; box-shadow: none; }
+        .optimblog-related-slider .swiper-slide { height: auto; }
+        .optimblog-related-slider .swiper-slide .thumbnail, .optimblog-related-slider .swiper-slide .product-thumb { margin-bottom: 0; }
+      </style>
+      {% endif %}
       {% if informations %}
       <h3>{{ text_related }}</h3>
+      {% if information_related_type == 'slider' %}
+      <div class="swiper-viewport optimblog-related-slider">
+        <div id="optimblog-related-information" class="swiper-container">
+          <div class="swiper-wrapper">
+            {% for information in informations %}
+            <div class="swiper-slide">
+            <div class="thumbnail">
+              <div class="image"><a href="{{ information.href }}"><img src="{{ information.thumb }}" alt="{{ information.name }}" title="{{ information.name }}" class="img-responsive" /></a></div>
+              <div class="caption">
+                <h4><a href="{{ information.href }}">{{ information.title }}</a></h4>
+                {% if show_related_author or show_related_date or show_related_review %}
+                <ul class="list-inline text-muted small">
+                  {% if show_related_date %}
+                  <li><i class="fa fa-calendar-o" aria-hidden="true"></i> {{ information.date_added }}</li>
+                  {% endif %}
+                  {% if show_related_author %}
+                  <li><i class="fa fa-user-o" aria-hidden="true"></i> {{ information.author }}</li>
+                  {% endif %}
+                  {% if show_related_review %}
+                  <li><i class="fa fa-comment-o" aria-hidden="true"></i> {{ information.reviews }}</li>
+                  {% endif %}
+                  {% if information.rating %}
+                  <li class="rating"> {% for j in 1..5 %}
+                    {% if information.rating < j %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span> {% endif %}
+                    {% endfor %}</li>
+                  {% endif %}
+                </ul>
+                {% endif %}
+                <p>{{ information.description }}</p>
+                <a href="{{ information.href }}" class="btn btn-primary btn-xs" role="button">{{ text_read }}</a>
+              </div>
+            </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="swiper-pagination optimblog-related-information-pagination"></div>
+        <div class="swiper-pager">
+          <div class="swiper-button-next optimblog-related-information-next"></div>
+          <div class="swiper-button-prev optimblog-related-information-prev"></div>
+        </div>
+      </div>
+      <script type="text/javascript"><!--
+      if ($.fn.swiper) {
+        $('#optimblog-related-information').swiper({
+          mode: 'horizontal',
+          slidesPerView: {{ related_per_view }},
+          spaceBetween: 30,
+          pagination: '.optimblog-related-information-pagination',
+          paginationClickable: true,
+          nextButton: '.optimblog-related-information-next',
+          prevButton: '.optimblog-related-information-prev',
+          autoplay: false,
+          loop: false,
+          breakpoints: {
+            479: { slidesPerView: 1 },
+            767: { slidesPerView: {{ related_per_view < 2 ? related_per_view : 2 }} },
+            991: { slidesPerView: {{ related_per_view < 3 ? related_per_view : 3 }} }
+          }
+        });
+      }
+      --></script>
+      {% else %}
       <div class="row"> {% set i = 0 %}
         {% for information in informations %}
         {% if column_left and column_right %}
@@ -3331,9 +3408,69 @@ $('input[name=\'information\']').autocomplete({
         {% endif %}
         {% set i = i + 1 %}
         {% endfor %} </div>
-        {% endif %}
+      {% endif %}
+      {% endif %}
       {% if products %}
       <h3>{{ text_related_product }}</h3>
+      {% if product_related_type == 'slider' %}
+      <div class="swiper-viewport optimblog-related-slider">
+        <div id="optimblog-related-product" class="swiper-container">
+          <div class="swiper-wrapper">
+            {% for product in products %}
+            <div class="swiper-slide">
+            <div class="product-thumb transition">
+              <div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+              <div class="caption">
+                <h4><a href="{{ product.href }}">{{ product.name }}</a></h4>
+                <p>{{ product.description }}</p>
+                {% if product.rating %}
+                <div class="rating"> {% for j in 1..5 %}
+                  {% if product.rating < j %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span> {% endif %}
+                  {% endfor %} </div>
+                {% endif %}
+                {% if product.price %}
+                <p class="price"> {% if not product.special %}
+                  {{ product.price }}
+                  {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
+                  {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
+                {% endif %} </div>
+              <div class="button-group">
+                <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span> <i class="fa fa-shopping-cart"></i></button>
+                <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+                <button type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><i class="fa fa-exchange"></i></button>
+              </div>
+            </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="swiper-pagination optimblog-related-product-pagination"></div>
+        <div class="swiper-pager">
+          <div class="swiper-button-next optimblog-related-product-next"></div>
+          <div class="swiper-button-prev optimblog-related-product-prev"></div>
+        </div>
+      </div>
+      <script type="text/javascript"><!--
+      if ($.fn.swiper) {
+        $('#optimblog-related-product').swiper({
+          mode: 'horizontal',
+          slidesPerView: {{ related_per_view }},
+          spaceBetween: 30,
+          pagination: '.optimblog-related-product-pagination',
+          paginationClickable: true,
+          nextButton: '.optimblog-related-product-next',
+          prevButton: '.optimblog-related-product-prev',
+          autoplay: false,
+          loop: false,
+          breakpoints: {
+            479: { slidesPerView: 1 },
+            767: { slidesPerView: {{ related_per_view < 2 ? related_per_view : 2 }} },
+            991: { slidesPerView: {{ related_per_view < 3 ? related_per_view : 3 }} }
+          }
+        });
+      }
+      --></script>
+      {% else %}
       <div class="row"> {% set i = 0 %}
         {% for product in products %}
         {% if column_left and column_right %}
@@ -3376,7 +3513,8 @@ $('input[name=\'information\']').autocomplete({
         {% endif %}
         {% set i = i + 1 %}
         {% endfor %} </div>
-        {% endif %}
+      {% endif %}
+      {% endif %}
         ]]></add>
       </operation>
       <operation error="skip">

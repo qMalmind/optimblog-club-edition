@@ -983,6 +983,9 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 				$data['show_related_author'] = $this->config->get('module_optimblog_category_author');
 				$data['show_related_date'] = $this->config->get('module_optimblog_category_date');
 				$data['show_related_review'] = $this->config->get('module_optimblog_category_review');
+
+				$data['information_related_type'] = $this->config->get('module_optimblog_information_related_type') == 'slider' ? 'slider' : 'list';
+				$data['product_related_type'] = $this->config->get('module_optimblog_product_related_type') == 'slider' ? 'slider' : 'list';
 			}
 		}
 	}

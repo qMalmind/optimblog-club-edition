@@ -9,7 +9,7 @@
  */
 class ControllerExtensionModuleOptimBlog extends Controller {
 	private $error = array();
-	private $version = '3.2';
+	private $version = '3.3';
 	private $github = 'https://api.github.com/repos/qMalmind/optimblog-club-edition';
 	private $releases = '/releases';
 	private $latest = '/latest';
@@ -447,6 +447,22 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 			$data['module_optimblog_information_thumb'] = $setting_info['module_optimblog_information_thumb'];
 		} else {
 			$data['module_optimblog_information_thumb']  = '';
+		}
+
+		if (isset($this->request->post['module_optimblog_information_related_type'])) {
+			$data['module_optimblog_information_related_type'] = $this->request->post['module_optimblog_information_related_type'];
+		} elseif (isset($setting_info['module_optimblog_information_related_type'])) {
+			$data['module_optimblog_information_related_type'] = $setting_info['module_optimblog_information_related_type'];
+		} else {
+			$data['module_optimblog_information_related_type'] = 'list';
+		}
+
+		if (isset($this->request->post['module_optimblog_product_related_type'])) {
+			$data['module_optimblog_product_related_type'] = $this->request->post['module_optimblog_product_related_type'];
+		} elseif (isset($setting_info['module_optimblog_product_related_type'])) {
+			$data['module_optimblog_product_related_type'] = $setting_info['module_optimblog_product_related_type'];
+		} else {
+			$data['module_optimblog_product_related_type'] = 'list';
 		}
 		
 		if (isset($this->request->post['module_optimblog_information_style'])) {
