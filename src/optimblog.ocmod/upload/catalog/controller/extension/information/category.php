@@ -381,6 +381,7 @@ class ControllerExtensionInformationCategory extends Controller {
 				$data['limit_show'] = $this->config->get('module_optimblog_category_limit_show');
 				$data['view_show'] = $this->config->get('module_optimblog_category_view_show');
 				$data['view'] = $this->config->get('module_optimblog_category_view');
+				$data['category_image_mobile'] = ($this->config->get('module_optimblog_category_image_mobile') == 'hide') ? 'hide' : 'show';
 
 				if ($this->config->get('module_optimblog_category_author') && !empty($this->config->get('module_optimblog_exclusion_category_author')) && in_array($category_id, $this->config->get('module_optimblog_exclusion_category_author'))) {
 					$data['show_author'] = false;

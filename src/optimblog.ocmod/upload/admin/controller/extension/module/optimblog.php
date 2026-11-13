@@ -528,6 +528,14 @@ class ControllerExtensionModuleOptimBlog extends Controller {
 			$data['module_optimblog_category_view_show'] = '';
 		}		
 		
+		if (isset($this->request->post['module_optimblog_category_image_mobile'])) {
+			$data['module_optimblog_category_image_mobile'] = $this->request->post['module_optimblog_category_image_mobile'];
+		} elseif (isset($setting_info['module_optimblog_category_image_mobile'])) {
+			$data['module_optimblog_category_image_mobile'] = $setting_info['module_optimblog_category_image_mobile'];
+		} else {
+			$data['module_optimblog_category_image_mobile'] = 'show';
+		}
+
 		if (isset($this->request->post['module_optimblog_information_limit'])) {
 			$data['module_optimblog_information_limit'] = $this->request->post['module_optimblog_information_limit'];
 		} elseif (isset($setting_info['module_optimblog_information_limit'])) {
